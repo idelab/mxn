@@ -379,6 +379,7 @@ Mapstraction.prototype.swap = function(element,api) {
 /**
  * Returns the loaded state of a Map Provider
  * @param {String} api Optional API to query for. If not specified, returns state of the originally created API
+ * @return {Boolean} The state of the map loading
  */
 Mapstraction.prototype.isLoaded = function(api){
 	if (api === null) {
@@ -390,6 +391,7 @@ Mapstraction.prototype.isLoaded = function(api){
 /**
  * Set the debugging on or off - shows alert panels for functions that don't exist in Mapstraction
  * @param {Boolean} debug true to turn on debugging, false to turn it off
+ * @return {Boolean} The state of debugging
  */
 Mapstraction.prototype.setDebug = function(debug){
 	if(debug !== null) {
@@ -489,6 +491,7 @@ Mapstraction.prototype.callEventListeners = function(sEventType, oEventArgs) {
  *	 scale:	true,
  *	 map_type: true,
  * }
+ *
  * @param {array} args Which controls to switch on
  */
 Mapstraction.prototype.addControls = function( args ) {
@@ -1612,6 +1615,7 @@ Polyline.prototype.addData = function(options){
 
 Polyline.prototype.setChild = function(some_proprietary_polyline) {
 	this.proprietary_polyline = some_proprietary_polyline;
+	some_proprietary_polyline.mapstraction_polyline = this;
 	this.onmap = true;
 };
 
@@ -1619,8 +1623,10 @@ Polyline.prototype.setChild = function(some_proprietary_polyline) {
  * in the form: #RRGGBB
  * Note map24 insists on upper case, so we convert it.
  */
-Polyline.prototype.setColor = function(color){
-	this.color = (color.length==7 && color[0]=="#") ? color.toUpperCase() : color;
+mxn.Polyline.prototype.setColor = function(color){
+	if(color !== null){
+		this.color = (color.length==7 && color[0]=="#") ? color.toUpperCase() : color;
+	}else {this.color = null;}
 };
 
 /**
