@@ -32,14 +32,10 @@ Mapstraction: {
 	},
 	
 	applyOptions: function(){
-		
-		/*
-		if (this.options.enableDragging) {
-			map.enableDragMap();
-		} else {
-			map.disableDragMap();
-		}*/
-		
+		if(this.options.enableScrollWheelZoom){
+			map.enableContinuousZoom();
+			map.enableScrollWheelZoom();
+		}
 	},
 
 	resizeTo: function(width, height){	
@@ -289,27 +285,24 @@ LatLonPoint: {
 Marker: {
 	
 	toProprietary: function() {
-		var ymarker, size;
-		var infoBubble, event_action, infoDiv, div;
-		
+		var ymarker;
+	    var size;
 	    if(this.iconSize) {
 	        size = new YSize(this.iconSize[0], this.iconSize[1]);
 	    }
 	    if(this.iconUrl) {
 	        if(this.iconSize){
 	            ymarker = new YMarker(this.location.toProprietary('yahoo'), new YImage(this.iconUrl, size));
-			}
-	        else {
+	        }else{
 	            ymarker = new YMarker(this.location.toProprietary('yahoo'), new YImage(this.iconUrl));
-			}
+	        }
 	    }
 	    else {
-	        if(this.iconSize) {
+	        if(this.iconSize){
 	            ymarker = new YMarker(this.location.toProprietary('yahoo'), null, size);
-			}
-	        else {
+	        }else{
 	            ymarker = new YMarker(this.location.toProprietary('yahoo'));
-			}
+	        }
 	    }
 
 	    if(this.labelText) {
@@ -317,7 +310,8 @@ Marker: {
 	    }
 
 	    if(this.infoBubble) {
-	        infoBubble = this.infoBubble;
+	        var theInfo = this.infoBubble;
+	        var event_action;
 	        if(this.hover) {
 	            event_action = EventsList.MouseOver;
 	        }
@@ -325,14 +319,16 @@ Marker: {
 	            event_action = EventsList.MouseClick;
 	        }
 	        YEvent.Capture(ymarker, event_action, function() {
-	            ymarker.openSmartWindow(infoBubble);
+	            ymarker.openSmartWindow(theInfo);
 	        });
 
 	    }
 
 	    if(this.infoDiv) {
-	        infoDiv = this.infoDiv;
-	        div = this.div;
+	        var theInfo = this.infoDiv;
+	        var div = this.div;
+	        var event_div;
+	        var event_action;
 	        if(this.hover) {
 	            event_action = EventsList.MouseOver;
 	        }
@@ -340,7 +336,7 @@ Marker: {
 	            event_action = EventsList.MouseClick;
 	        }
 	        YEvent.Capture(ymarker, event_action, function() {
-	            document.getElementById(div).innerHTML = infoDiv;
+	            document.getElementById(div).innerHTML = theInfo;
 	        });
 	    }
 
@@ -372,10 +368,15 @@ Polyline: {
 		var ypolyline;
 	    var ypoints = [];
 	    for (var i = 0, length = this.points.length ; i< length; i++){
-	        ypoints.push(this.points[i].toProprietary('yahoo'));
+	        ypoints.push(this.points[i].toProprietary(this.api));
 	    }
-	    ypolyline = new YPolyline(ypoints,this.color,this.width,this.opacity);
-	    return ypolyline;
+		if(this.closed &&!this.points[0].equals(this.points[this.points.length-1])){
+			ypoints.push(ypoints[0]);
+			ypolyline = new YPolyline(ypoints,this.color,this.width,this.opacity);
+		}else{
+	   		ypolyline = new YPolyline(ypoints,this.color,this.width,this.opacity);
+		}
+		return ypolyline;
 	},
 	
 	show: function() {
