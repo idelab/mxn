@@ -1,7 +1,3 @@
-/**
- * @author Pablo López @ IDELab
- */
-
 (function(){
 /**
  * Initialise our provider. This function should only be called 

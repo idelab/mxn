@@ -1,7 +1,3 @@
-/**
- * @author Pablo López @ IDELab
- */
-
 mxn.register('mapquest',{
 	MapstractionRouter:{
 		init:function(callback,api){

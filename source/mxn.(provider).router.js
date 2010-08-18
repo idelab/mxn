@@ -1,7 +1,3 @@
-/**
- * @author Pablo López @ IDELab
- */
- 
 mxn.register('{{api_id}}',{
 	MapstractionRouter:{
 		init:function(callback,api){
