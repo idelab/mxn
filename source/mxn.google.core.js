@@ -33,8 +33,11 @@ var GoogleSettings = function(){
 						me.changeZoom.fire();
 					});
 					
-					this.loaded[api] = true;
-					me.load.fire();
+					GEvent.addListener(this.maps[api], 'load', function() {
+						this.loaded[api] = true;
+						me.load.fire();
+					});
+					
 				}
 				else {
 					alert('browser not compatible with Google Maps');
